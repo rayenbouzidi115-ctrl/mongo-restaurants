@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: nyc_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    container_name: nyc_jupyter
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      JUPYTER_TOKEN: rayen
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/work/data
+
+volumes:
+  mongo_data:
